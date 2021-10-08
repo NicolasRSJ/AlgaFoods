@@ -4,12 +4,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.NOT_FOUND)
-public abstract class EntidadeNaoEncontradaException extends RuntimeException {
+public class EstadoNaoEncontradaException extends EntidadeNaoEncontradaException {
 
 	private static final long serialVersionUID = 1L;
 
-	public EntidadeNaoEncontradaException(String mensagem) {
+	public EstadoNaoEncontradaException(String mensagem) {
 		super(mensagem);
+	}
+	
+	public EstadoNaoEncontradaException(Long estadoId) {
+		this(String.format("Não existe um cadastro de estado com código %d",estadoId));
 	}
 	
 }
