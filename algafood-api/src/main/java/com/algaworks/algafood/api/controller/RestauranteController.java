@@ -55,6 +55,7 @@ public class RestauranteController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Restaurante adicionar(@RequestBody @Valid Restaurante restaurante) {
+
 		try {
 			return cadastroRestaurante.salvar(restaurante);
 		} catch (CozinhaNaoEncontradaException e) {
@@ -64,7 +65,7 @@ public class RestauranteController {
 	
 	@PutMapping("/{restauranteId}")
 	public Restaurante atualizar(@PathVariable Long restauranteId,
-			@RequestBody Restaurante restaurante) {
+			@RequestBody @Valid Restaurante restaurante) {
 		try {
 			Restaurante restauranteAtual = cadastroRestaurante.buscarOuFalhar(restauranteId);
 			
@@ -87,9 +88,9 @@ public class RestauranteController {
 		return atualizar(restauranteId, restauranteAtual);
 	}
 
-	private void merge(Map<String, Object> dadosOrigem, Restaurante restauranteDestino, 
+	private void merge(Map<String, Object> dadosOrigem, Restaurante restauranteDestino,
 			HttpServletRequest request) {
-		ServletServerHttpRequest serverHttpResquest = new ServletServerHttpRequest(request);
+		ServletServerHttpRequest serverHttpRequest = new ServletServerHttpRequest(request);
 		
 		try {
 			ObjectMapper objectMapper = new ObjectMapper();
@@ -106,9 +107,9 @@ public class RestauranteController {
 				
 				ReflectionUtils.setField(field, restauranteDestino, novoValor);
 			});
-		}catch(IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 			Throwable rootCause = ExceptionUtils.getRootCause(e);
-			throw new HttpMessageNotReadableException(e.getMessage(), rootCause, serverHttpResquest);
+			throw new HttpMessageNotReadableException(e.getMessage(), rootCause, serverHttpRequest);
 		}
 	}
 	
